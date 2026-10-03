@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Singapore Braces Decision Dashboard</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#ffffff; --ink:#18202a; --muted:#667085; --line:#e4e7ec;
+  --accent:#2457a7; --accent2:#eaf1fb; --good:#197447; --warn:#9a6700; --bad:#b42318;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+header{background:linear-gradient(135deg,#173966,#2457a7);color:#fff;padding:34px 20px 28px}
+.wrap{max-width:1180px;margin:auto}
+h1{margin:0 0 8px;font-size:clamp(1.8rem,4vw,2.8rem)}
+h2{margin:0 0 14px;font-size:1.35rem}
+h3{margin:0 0 8px;font-size:1.02rem}
+p{margin:8px 0}
+.sub{opacity:.9;max-width:900px}
+.updated{margin-top:12px;font-size:.9rem;opacity:.8}
+nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);z-index:5}
+nav .wrap{display:flex;gap:8px;overflow:auto;padding:10px 16px}
+nav a{white-space:nowrap;text-decoration:none;color:var(--accent);font-weight:650;padding:7px 10px;border-radius:8px}
+nav a:hover{background:var(--accent2)}
+main{padding:22px 16px 50px}
+section{margin:0 0 24px}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:17px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.span-12{grid-column:span 12}.span-8{grid-column:span 8}.span-6{grid-column:span 6}.span-4{grid-column:span 4}
+@media(max-width:850px){.span-8,.span-6,.span-4{grid-column:span 12}}
+.kpi{font-size:1.65rem;font-weight:800}.small{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:.8rem;font-weight:700;background:#f2f4f7;color:#344054;margin:2px 3px 2px 0}
+.pill.good{background:#e8f5ee;color:var(--good)} .pill.warn{background:#fff3d6;color:var(--warn)}
+.pill.blue{background:var(--accent2);color:var(--accent)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{padding:11px 9px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+th{font-size:.8rem;color:#475467;text-transform:uppercase;letter-spacing:.02em}
+tr:last-child td{border-bottom:0}
+.price{font-weight:800;white-space:nowrap}
+.muted{color:var(--muted)}
+.btn{border:0;border-radius:9px;padding:9px 12px;background:var(--accent);color:#fff;font-weight:700;cursor:pointer}
+.btn.secondary{background:#eef2f6;color:#344054}
+.btn.outline{background:#fff;color:var(--accent);border:1px solid #b8c8e5}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+label{font-weight:650;font-size:.9rem}
+input[type="number"],input[type="text"],select,textarea{width:100%;padding:9px 10px;border:1px solid #cfd4dc;border-radius:8px;background:#fff;font:inherit}
+textarea{min-height:80px}
+.range-row{display:grid;grid-template-columns:1fr 70px;gap:10px;align-items:center;margin:9px 0}
+input[type="range"]{width:100%}
+.score{font-size:2rem;font-weight:850;color:var(--accent)}
+.scorebar{height:8px;background:#eaecf0;border-radius:999px;overflow:hidden;margin-top:7px}
+.scorebar span{display:block;height:100%;background:var(--accent);width:0}
+.callout{border-left:4px solid var(--accent);background:#f7faff;padding:12px 14px;border-radius:8px}
+.warnbox{border-left:4px solid #f5b301;background:#fffaf0;padding:12px 14px;border-radius:8px}
+.quotegrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(max-width:600px){.quotegrid{grid-template-columns:1fr}}
+details{border-top:1px solid var(--line);padding:10px 0}
+details:first-of-type{border-top:0}
+summary{cursor:pointer;font-weight:750}
+a{color:var(--accent)}
+footer{color:var(--muted);font-size:.85rem;padding:20px 0}
+.no-print{}
+@media print{nav,.no-print{display:none!important}body{background:#fff}.card{box-shadow:none;break-inside:avoid}header{background:#fff;color:#000;border-bottom:2px solid #000}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Singapore Braces Decision Dashboard</h1>
+    <div class="sub">A personal comparison tool for metal vs ceramic braces, with emphasis on named clinicians, orthodontic credentials, total-cost transparency, and what is actually included.</div>
+    <div class="updated">Research snapshot: October 2026 · Prices are public/quoted figures and must be confirmed after clinical assessment.</div>
+  </div>
+</header>
+
+<nav>
+  <div class="wrap">
+    <a href="#snapshot">Snapshot</a>
+    <a href="#compare">Compare</a>
+    <a href="#priorities">My priorities</a>
+    <a href="#quotes">Quote tracker</a>
+    <a href="#clinics">Clinic notes</a>
+    <a href="#questions">Questions to ask</a>
+    <a href="#sources">Sources</a>
+  </div>
+</nav>
+
+<main class="wrap">
+<section id="snapshot">
+  <div class="grid">
+    <div class="card span-4">
+      <div class="small">Lowest clearly published adult specialist metal package</div>
+      <div class="kpi">S$3,888 + GST</div>
+      <div><span class="pill good">Teeth Q RiverCourt</span></div>
+      <p class="small">Includes specialist consultation, required X-rays, digital scan, braces records and clear retainers. Complex cases: +S$300–500.</p>
+    </div>
+    <div class="card span-4">
+      <div class="small">Most transparent published ceramic range nearby</div>
+      <div class="kpi">S$5,500–7,000</div>
+      <div><span class="pill blue">Advanced Dental</span></div>
+      <p class="small">Headline treatment fee. Consultation, X-rays, bracket removal, extractions and retainers are billed separately.</p>
+    </div>
+    <div class="card span-4">
+      <div class="small">Your existing Atria estimate</div>
+      <div class="kpi">S$5,435–5,915</div>
+      <div><span class="pill warn">Metal · before excluded items</span></div>
+      <p class="small">Based on 20–24 adjustments from your uploaded quotation. Several common items are excluded and GST needs confirmation.</p>
+    </div>
+  </div>
+</section>
+
+<section id="compare" class="card">
+  <h2>Side-by-side comparison</h2>
+  <p class="small">Use this as a screening table, not as a clinical recommendation. “Specialist” status is based on how the clinic currently identifies the clinician and, where stated, Singapore Dental Council specialist accreditation.</p>
+  <div style="overflow:auto">
+  <table>
+    <thead>
+      <tr>
+        <th>Clinic</th><th>Named clinician(s)</th><th>Credential signal</th><th>Metal</th><th>Ceramic</th><th>What stands out</th><th>What still needs confirmation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Teeth Q Hougang RiverCourt</strong><br><span class="small">Hougang / Kovan</span></td>
+        <td>Dr Tang Panmei<br>Dr Joyce Ong</td>
+        <td><span class="pill good">Orthodontists</span><br><span class="small">MDS Orthodontics; M Orth RCS listed</span></td>
+        <td class="price">S$3,888 + GST<br><span class="small">≈ S$4,238 incl. 9% GST</span></td>
+        <td><strong>Quote required</strong></td>
+        <td>Published specialist fee includes consultation, required X-rays, digital scan, records and clear retainers.</td>
+        <td>Whether S$3,888 is strictly conventional metal; ceramic surcharge; whether all routine adjustments/debonding are fully included.</td>
+      </tr>
+      <tr>
+        <td><strong>TSD Dental Hougang 810</strong><br><span class="small">Hougang Central</span></td>
+        <td>Dr Low Gim Hong</td>
+        <td><span class="pill good">SDC-accredited orthodontic specialist</span><br><span class="small">BDS, MDS Orthodontics, M Orth RCS, FAMS</span></td>
+        <td><strong>Quote required</strong></td>
+        <td><strong>Quote required</strong></td>
+        <td>Named specialist close to Hougang; clinic states Dr Low is an accredited Dental Specialist in Orthodontics.</td>
+        <td>Current all-in metal/ceramic fees, retainers, X-rays, debonding and treatment-duration limits.</td>
+      </tr>
+      <tr>
+        <td><strong>Advanced Dental Buangkok</strong><br><span class="small">Sengkang Grand Mall</span></td>
+        <td>Dr Julia Foo</td>
+        <td><span class="pill blue">Orthodontics Registrar</span><br><span class="small">BDS, MDS (Orthodontics)</span></td>
+        <td class="price">S$4,500–4,900<br><span class="small">published tier; confirm Dr Foo's exact quote</span></td>
+        <td class="price">S$5,500–7,000</td>
+        <td>Routine adjustments within the staged treatment plan are included. Very transparent fee schedule.</td>
+        <td>Exact clinician tier; consultation; X-rays; bracket removal; retainer type; extractions if needed.</td>
+      </tr>
+      <tr>
+        <td><strong>Align Braces Clinic</strong><br><span class="small">Plaza Singapura</span></td>
+        <td>Dr Arella Chen<br>Dr Tan Qing Zhen<br>Dr Stanley Kok<br>Dr Lydia Yong</td>
+        <td><span class="pill good">Dental Specialists in Orthodontics</span></td>
+        <td class="price">S$4,800–6,000 + GST<br><span class="small">≈ S$5,232–6,540 incl. GST</span></td>
+        <td class="price">S$5,500–8,000<br><span class="small">confirm GST/inclusions in written quote</span></td>
+        <td>Orthodontics-focused clinic. Metal package page states consultation, X-rays/digital scans and one set of clear retainers are included.</td>
+        <td>Exact ceramic inclusions; whether every routine review is covered; any debonding/emergency charges.</td>
+      </tr>
+
+      <tr>
+        <td><strong>Joy Dental Centre — Buangkok</strong><br><span class="small">Buangkok Square Mall</span></td>
+        <td>Dr Lim Mei Yian<br>Dr Cheryl Lai</td>
+        <td><span class="pill good">Orthodontic team</span><br><span class="small">Dr Lim is described by Joy Dental as a certified orthodontist/specialist; Dr Cheryl Lai holds a Master's Degree in Orthodontics. Confirm who sees you at Buangkok.</span></td>
+        <td class="price">From S$4,200 + GST<br><span class="small">standard adult metal plan</span></td>
+        <td><strong>Quote required</strong><br><span class="small">Joy Dental offers ceramic braces but does not publish a current ceramic fee on its braces page.</span></td>
+        <td>Adult metal plan includes consultation (if proceeding that day), digital X-rays, mould/scans, treatment plan, regular reviews, braces installation and removal.</td>
+        <td>Retainers are not clearly listed in the published metal package; ceramic price; refinements/complex-case additions; which named orthodontic clinician is available at Buangkok.</td>
+      </tr>
+      <tr>
+        <td><strong>Atria-City</strong><br><span class="small">Ngee Ann City / Orchard</span></td>
+        <td>Not identified on your uploaded quote</td>
+        <td><span class="pill warn">Verify treating clinician</span></td>
+        <td class="price">~S$5,435–5,915<br><span class="small">20–24 adjustments</span></td>
+        <td class="price">~S$6,235–6,835<br><span class="small">20–24 adjustments</span></td>
+        <td>You already have a detailed quote and can use it as a benchmark.</td>
+        <td>Named clinician and specialist status, GST, X-rays, infection-control fees, extractions, exact retainer type and overrun cost if treatment lasts longer.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="priorities">
+  <div class="grid">
+    <div class="card span-4">
+      <h2>My priorities</h2>
+      <p class="small">Move the sliders. The score is a planning aid only. It deliberately rewards transparency and named specialist care rather than online popularity.</p>
+      <div class="range-row"><label>Specialist credentials</label><output id="o-specialist">5</output><input id="w-specialist" type="range" min="0" max="5" value="5"></div>
+      <div class="range-row"><label>Lower total cost</label><output id="o-price">4</output><input id="w-price" type="range" min="0" max="5" value="4"></div>
+      <div class="range-row"><label>Cost certainty / inclusions</label><output id="o-certainty">5</output><input id="w-certainty" type="range" min="0" max="5" value="5"></div>
+      <div class="range-row"><label>Near Hougang/Buangkok</label><output id="o-location">4</output><input id="w-location" type="range" min="0" max="5" value="4"></div>
+      <div class="range-row"><label>Ceramic affordability</label><output id="o-ceramic">3</output><input id="w-ceramic" type="range" min="0" max="5" value="3"></div>
+      <div class="controls"><button class="btn" onclick="recalc()">Recalculate</button><button class="btn secondary" onclick="resetWeights()">Reset</button></div>
+    </div>
+    <div class="card span-8">
+      <h2>Decision-support scores</h2>
+      <div id="scores"></div>
+      <div class="warnbox" style="margin-top:14px"><strong>Important:</strong> A high score means “fits the preferences you selected based on currently available information.” It does not mean the clinic is clinically superior. Your orthodontic diagnosis and written treatment plan should override this dashboard.</div>
+    </div>
+  </div>
+</section>
+
+<section id="quotes" class="card">
+  <h2>Quote tracker — save your real consultation figures</h2>
+  <p class="small">These fields save locally in your browser. Replace public estimates with the written quotes you receive. You can also export a backup file.</p>
+  <div id="quoteCards"></div>
+  <div class="controls no-print">
+    <button class="btn" onclick="saveQuotes()">Save changes</button>
+    <button class="btn outline" onclick="exportData()">Export my data (.json)</button>
+    <label class="btn secondary" style="cursor:pointer">Import data <input id="importFile" type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
+    <button class="btn secondary" onclick="window.print()">Print / Save PDF</button>
+  </div>
+</section>
+
+<section id="clinics">
+  <div class="grid">
+    <div class="card span-6">
+      <h2>Teeth Q RiverCourt</h2>
+      <span class="pill good">Strong price transparency</span><span class="pill good">Named orthodontists</span>
+      <p><strong>Doctors:</strong> Dr Tang Panmei and Dr Joyce Ong.</p>
+      <p><strong>Published adult specialist fee:</strong> S$3,888 + prevailing GST. Complex cases may add S$300–500.</p>
+      <p><strong>Included:</strong> specialist consultation, required X-rays, digital scan, braces records, clear retainers.</p>
+      <p><strong>Best reason to consult:</strong> it gives you a relatively complete published specialist package against which all other quotes can be tested.</p>
+      <p class="small"><a href="https://teethq.com/braces-singapore-student-price/" target="_blank">Official braces fee page ↗</a></p>
+    </div>
+    <div class="card span-6">
+      <h2>TSD Hougang 810</h2>
+      <span class="pill good">Named SDC-accredited specialist</span><span class="pill blue">Very local</span>
+      <p><strong>Doctor:</strong> Dr Low Gim Hong — BDS, MDS (Orthodontics), M Orth RCS (Edinburgh), FAMS (Orthodontics).</p>
+      <p>TSD states that Dr Low is an accredited Dental Specialist in Orthodontics with the Singapore Dental Council and previously served as a Visiting Specialist at National Dental Centre Singapore.</p>
+      <p><strong>Best reason to consult:</strong> continuity with a named orthodontic specialist in the Hougang area.</p>
+      <p><strong>Gap:</strong> no sufficiently current public all-in metal/ceramic package found, so the written quote matters.</p>
+      <p class="small"><a href="https://www.tsddental.com/dr-low-gim-hong/" target="_blank">Dr Low profile ↗</a> · <a href="https://www.tsddental.com/dental-clinic-hougang-810/" target="_blank">Hougang clinic ↗</a></p>
+    </div>
+    <div class="card span-6">
+      <h2>Advanced Dental Buangkok</h2>
+      <span class="pill blue">Transparent 2026 fee schedule</span><span class="pill blue">Buangkok MRT</span>
+      <p><strong>Doctor:</strong> Dr Julia Foo — Registrar, Department of Orthodontics; BDS, MDS (Orthodontics).</p>
+      <p><strong>Published treatment fees:</strong> metal S$4,500–4,900 in the listed specialist/senior-dentist tier; ceramic S$5,500–7,000. Advanced separately lists consultation, OPG/ceph X-rays, extractions, retainers and bracket removal.</p>
+      <p><strong>Useful detail:</strong> routine adjustment visits within the staged treatment are included; the S$200 adjustment fee is for ad-hoc adjustments outside that plan.</p>
+      <p class="small"><a href="https://www.advanceddental.co/procedures/braces/cost/" target="_blank">2026 fee guide ↗</a> · <a href="https://www.advanceddental.co/doctors/julia-foo/" target="_blank">Dr Julia Foo ↗</a></p>
+    </div>
+
+    <div class="card span-6">
+      <h2>Joy Dental Centre — Buangkok</h2>
+      <span class="pill good">Published adult metal plan</span><span class="pill blue">Buangkok Square Mall</span>
+      <p><strong>Braces team:</strong> Joy Dental identifies Dr Lim Mei Yian as a certified orthodontist/specialist and Dr Cheryl Lai as having a Master's Degree in Orthodontics with a focus on braces and Invisalign. Confirm which clinician is available for your case at the Buangkok branch.</p>
+      <p><strong>Published adult metal braces:</strong> from S$4,200 before GST. At 9% GST, the starting figure is about <strong>S$4,578</strong>.</p>
+      <p><strong>Published inclusions:</strong> consultation if you commit to treatment that day, braces cementation, digital X-rays and mould/scans, regular reviews, treatment plan and braces removal.</p>
+      <p><strong>Ceramic braces:</strong> offered by Joy Dental, but no current ceramic-braces price is published on the main braces page. Request an itemised ceramic quote.</p>
+      <p><strong>Important gap:</strong> retainers are not explicitly listed among the published metal-plan inclusions, so confirm upper/lower retainers and replacement-retainer fees in writing.</p>
+      <p class="small"><a href="https://joydental.sg/dental-braces/" target="_blank">Joy Dental braces page ↗</a> · <a href="https://joydental.sg/locations/" target="_blank">Buangkok location ↗</a></p>
+    </div>
+    <div class="card span-6">
+      <h2>Align Braces Clinic — Plaza Singapura</h2>
+      <span class="pill good">Multiple specialist orthodontists</span><span class="pill blue">Orthodontics-focused</span>
+      <p><strong>Orchard team:</strong> Dr Arella Chen, Dr Tan Qing Zhen, Dr Stanley Kok and Dr Lydia Yong are listed as Dental Specialists in Orthodontics.</p>
+      <p><strong>Published metal estimate:</strong> S$4,800–6,000 + GST. Its metal page states that treatment packages include the initial consultation, orthodontic records with X-rays/digital scans and one set of clear retainers.</p>
+      <p><strong>Published ceramic estimate:</strong> S$5,500–8,000; obtain a written quote to confirm GST and inclusions for your case.</p>
+      <p class="small"><a href="https://www.alignbracesclinic.com/our-services/metal-braces" target="_blank">Metal braces ↗</a> · <a href="https://www.alignbracesclinic.com/our-services/ceramic-braces" target="_blank">Ceramic braces ↗</a> · <a href="https://www.alignbracesclinic.com/our-clinic/orchard" target="_blank">Orchard team ↗</a></p>
+    </div>
+  </div>
+</section>
+
+<section id="questions" class="card">
+  <h2>Consultation checklist</h2>
+  <p>Ask every clinic the same questions so that you compare like-for-like:</p>
+  <ol>
+    <li><strong>Who personally manages my case?</strong> Ask for the dentist/orthodontist's name and whether they are on the Singapore Dental Council Dental Specialist Register for Orthodontics.</li>
+    <li><strong>What is my total metal price and ceramic price including GST?</strong></li>
+    <li><strong>Are all routine adjustment visits included until treatment is complete?</strong> If not, what happens if treatment runs 6–12 months longer?</li>
+    <li><strong>Are OPG + lateral ceph X-rays, photos, scans/models and treatment planning included?</strong></li>
+    <li><strong>Are bracket removal/debonding and one upper + lower retainer set included?</strong> Ask which retainer type.</li>
+    <li><strong>What is excluded?</strong> Extractions, fillings, scaling/polishing, emergency repairs, broken brackets, sterilisation/infection-control fees and replacement retainers.</li>
+    <li><strong>How often are reviews expected and what treatment duration is estimated for my specific bite?</strong></li>
+    <li><strong>If I relocate or need to transfer care, what records/transfer fees apply?</strong></li>
+  </ol>
+</section>
+
+<section id="sources" class="card">
+  <h2>Source notes</h2>
+  <p class="small">Public information can change. Always use the clinic's written quotation as the final financial reference.</p>
+  <ul>
+    <li><a href="https://teethq.com/braces-singapore-student-price/" target="_blank">Teeth Q — specialist braces fees and inclusions</a></li>
+    <li><a href="https://www.tsddental.com/dr-low-gim-hong/" target="_blank">TSD — Dr Low Gim Hong profile and specialist accreditation statement</a></li>
+    <li><a href="https://www.tsddental.com/dental-clinic-hougang-810/" target="_blank">TSD — Hougang 810 clinic team</a></li>
+    <li><a href="https://www.advanceddental.co/procedures/braces/cost/" target="_blank">Advanced Dental — 2026 braces cost guide</a></li>
+    <li><a href="https://www.advanceddental.co/doctors/julia-foo/" target="_blank">Advanced Dental — Dr Julia Foo profile</a></li>
+    <li><a href="https://joydental.sg/dental-braces/" target="_blank">Joy Dental — current braces plans, inclusions and braces team</a></li>
+    <li><a href="https://joydental.sg/locations/" target="_blank">Joy Dental — Buangkok location and opening hours</a></li>
+    <li><a href="https://go.joydental.sg/general/" target="_blank">Joy Dental — published S$3,815 metal package</a></li>
+    <li><a href="https://joydental.sg/dental-braces/" target="_blank">Joy Dental — braces types and orthodontic team</a></li>
+    <li><a href="https://joydental.sg/locations/" target="_blank">Joy Dental — Buangkok location</a></li>
+    <li><a href="https://www.alignbracesclinic.com/our-services/metal-braces" target="_blank">Align — metal braces package estimates/inclusions</a></li>
+    <li><a href="https://www.alignbracesclinic.com/our-services/ceramic-braces" target="_blank">Align — ceramic braces estimate</a></li>
+    <li><a href="https://www.alignbracesclinic.com/our-clinic/orchard" target="_blank">Align — Plaza Singapura orthodontic team</a></li>
+    <li><strong>Atria:</strong> figures are transcribed from the quotation you uploaded in this chat; GST and excluded items should be verified directly.</li>
+  </ul>
+</section>
+
+<footer>
+  This dashboard helps organise a consumer decision; it is not dental diagnosis or a substitute for an orthodontic examination. For any treatment choice, rely on the clinician's examination, diagnostic records and written treatment plan.
+</footer>
+</main>
+
+<script>
+const clinics = [
+ {id:'teethq', name:'Teeth Q RiverCourt', base:{specialist:5,price:5,certainty:5,location:5,ceramic:2}},
+ {id:'tsd', name:'TSD Hougang / Dr Low', base:{specialist:5,price:2,certainty:2,location:5,ceramic:2}},
+ {id:'advanced', name:'Advanced Buangkok / Dr Foo', base:{specialist:3.5,price:3.5,certainty:4,location:5,ceramic:4}},
+ {id:'align', name:'Align Plaza Singapura', base:{specialist:5,price:3,certainty:4,location:2.5,ceramic:3.5}},
+ {id:'joy', name:'Joy Dental Buangkok', base:{specialist:4,price:4,certainty:4,location:5,ceramic:2.5}},
+ {id:'atria', name:'Atria-City', base:{specialist:2,price:2.5,certainty:2,location:2.5,ceramic:3}}
+];
+
+const quoteDefaults = {
+ teethq:{metal:'3888 + GST', ceramic:'Quote needed', gst:'9%', xray:'Included', retainers:'Clear retainers included', adjustments:'Confirm all routine reviews', doctor:'Dr Tang Panmei / Dr Joyce Ong', notes:'Complex case: +S$300–500.'},
+ tsd:{metal:'Quote needed', ceramic:'Quote needed', gst:'Confirm', xray:'Confirm', retainers:'Confirm', adjustments:'Confirm', doctor:'Dr Low Gim Hong', notes:'Ask for all-in written quote.'},
+ advanced:{metal:'4500–4900', ceramic:'5500–7000', gst:'Confirm in written quote', xray:'OPG 100 + ceph 100', retainers:'Essix 200/arch; other types higher', adjustments:'Routine staged reviews included', doctor:'Dr Julia Foo', notes:'Removal S$15/tooth; consultation/extractions separate.'},
+ align:{metal:'4800–6000 + GST', ceramic:'5500–8000', gst:'Metal page says prevailing GST', xray:'Included in metal package', retainers:'1 set clear retainers included in metal package', adjustments:'Confirm', doctor:'Choose named specialist', notes:'Confirm ceramic package inclusions/GST.'},
+ joy:{metal:'From 4200 + GST', ceramic:'Quote needed', gst:'9% prevailing GST', xray:'Digital X-rays included', retainers:'Not clearly listed — confirm', adjustments:'Regular reviews included', doctor:'Dr Lim Mei Yian / Dr Cheryl Lai — confirm Buangkok availability', notes:'Complex cases/refinements/additional procedures may cost more. Braces removal included.'},
+ atria:{metal:'5435–5915 est.', ceramic:'6235–6835 est.', gst:'Confirm', xray:'Excluded', retainers:'Included within S$950 removal + retainer item', adjustments:'S$120 metal / S$150 ceramic each', doctor:'Confirm', notes:'Estimate assumes 20–24 adjustments; several extras excluded.'}
+};
+
+function field(id,key,val){
+  return `<div><label>${key}</label><input data-clinic="${id}" data-key="${key}" value="${String(val).replaceAll('"','&quot;')}"></div>`;
+}
+function renderQuotes(data){
+  const host=document.getElementById('quoteCards'); host.innerHTML='';
+  for (const c of clinics){
+    const q=data[c.id]||quoteDefaults[c.id];
+    const div=document.createElement('details'); div.open = c.id==='teethq';
+    div.innerHTML=`<summary>${c.name}</summary><div class="quotegrid" style="padding-top:10px">
+      ${field(c.id,'metal',q.metal||'')}
+      ${field(c.id,'ceramic',q.ceramic||'')}
+      ${field(c.id,'gst',q.gst||'')}
+      ${field(c.id,'xray',q.xray||'')}
+      ${field(c.id,'retainers',q.retainers||'')}
+      ${field(c.id,'adjustments',q.adjustments||'')}
+      ${field(c.id,'doctor',q.doctor||'')}
+      ${field(c.id,'notes',q.notes||'')}
+    </div>`;
+    host.appendChild(div);
+  }
+}
+function gatherQuotes(){
+  const out={};
+  document.querySelectorAll('[data-clinic]').forEach(el=>{
+    const id=el.dataset.clinic, key=el.dataset.key;
+    if(!out[id]) out[id]={};
+    out[id][key]=el.value;
+  });
+  return out;
+}
+function saveQuotes(){
+  localStorage.setItem('bracesQuotes', JSON.stringify(gatherQuotes()));
+  localStorage.setItem('bracesWeights', JSON.stringify(getWeights()));
+  alert('Saved in this browser.');
+}
+function getWeights(){
+  return {
+    specialist:+document.getElementById('w-specialist').value,
+    price:+document.getElementById('w-price').value,
+    certainty:+document.getElementById('w-certainty').value,
+    location:+document.getElementById('w-location').value,
+    ceramic:+document.getElementById('w-ceramic').value
+  };
+}
+function recalc(){
+  const w=getWeights();
+  Object.keys(w).forEach(k=>document.getElementById('o-'+k).textContent=w[k]);
+  const denom=Object.values(w).reduce((a,b)=>a+b,0)||1;
+  const scored=clinics.map(c=>{
+    const n=Object.keys(w).reduce((s,k)=>s+w[k]*c.base[k],0)/(denom*5)*100;
+    return {...c,score:n};
+  }).sort((a,b)=>b.score-a.score);
+  document.getElementById('scores').innerHTML=scored.map((c,i)=>`
+    <div style="margin:14px 0">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:end">
+        <div><strong>${i+1}. ${c.name}</strong><div class="small">Preference fit using current public information</div></div>
+        <div class="score">${c.score.toFixed(0)}<span class="small">/100</span></div>
+      </div>
+      <div class="scorebar"><span style="width:${c.score}%"></span></div>
+    </div>`).join('');
+}
+function resetWeights(){
+  const d={specialist:5,price:4,certainty:5,location:4,ceramic:3};
+  Object.entries(d).forEach(([k,v])=>document.getElementById('w-'+k).value=v);
+  recalc();
+}
+function exportData(){
+  const payload={version:1, saved:new Date().toISOString(), quotes:gatherQuotes(), weights:getWeights()};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='braces-comparison-data.json'; a.click(); URL.revokeObjectURL(a.href);
+}
+function importData(e){
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader(); r.onload=()=>{
+    try{
+      const d=JSON.parse(r.result);
+      if(d.quotes){renderQuotes(d.quotes); localStorage.setItem('bracesQuotes',JSON.stringify(d.quotes));}
+      if(d.weights){Object.entries(d.weights).forEach(([k,v])=>{const el=document.getElementById('w-'+k);if(el)el.value=v;});}
+      recalc(); alert('Imported.');
+    }catch(err){alert('Could not read that JSON file.');}
+  }; r.readAsText(f);
+}
+for (const k of ['specialist','price','certainty','location','ceramic']){
+  document.addEventListener('input',e=>{if(e.target.id==='w-'+k){document.getElementById('o-'+k).textContent=e.target.value; recalc();}});
+}
+const savedQuotes=JSON.parse(localStorage.getItem('bracesQuotes')||'null')||quoteDefaults;
+renderQuotes(savedQuotes);
+const savedWeights=JSON.parse(localStorage.getItem('bracesWeights')||'null');
+if(savedWeights){Object.entries(savedWeights).forEach(([k,v])=>{const el=document.getElementById('w-'+k);if(el)el.value=v;});}
+recalc();
+</script>
+</body>
+</html>
